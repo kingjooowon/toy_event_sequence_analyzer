@@ -1,4 +1,4 @@
-import os
+import os, json
 from collections import Counter
 from reader import read_events
 from sequence import build_sequences
@@ -20,17 +20,26 @@ def count_sequences(sequences):
         
     return dict(counter)
 
-
-if __name__ == "__main__":
-    
+def main():
     events = read_events("sample_events.csv")
     sequences = build_sequences(events)
-    stats = count_sequences(sequences)
+    sequence_counts = count_sequences(sequences)
     anomalies = detect_anomalies(sequences)
     
-    print(events)
-    print(sequences)
-    print(stats)
-    print(anomalies)
-    generate_report(len(sequences), stats, anomalies)
+    generate_report(
+        total_users=len(sequences),
+        sequence_counts=sequence_counts,
+        anomalies=anomalies
+    )
     
+    result = {
+        "total_users" : len(sequences),
+        "top_sequences" : sequence_counts,
+        "anomalies" : anomalies 
+    }
+    
+    print("\nJSON 결과:")
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    
+if __name__ == "__main__":
+    main()
