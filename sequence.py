@@ -14,3 +14,5 @@ def build_sequences(events):
     for user, evs in grouped.items():
         evs.sort(key=lambda x: x["timestamp"])
         sequences[user] = [e["event"] for e in evs]
+        
+    return sequences
